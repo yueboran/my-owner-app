@@ -1,0 +1,91 @@
+<div class="deck-left-hover-anchor" id="deckLeftHover" aria-label="Deck controls">
+  <div class="deck-left-row">
+    <button type="button" class="edit-toggle" id="editToggle" title="Edit mode (E) — hover this corner to show">Edit</button>
+    <button type="button" class="sidebar-pages-toggle" id="pagesToggle" title="Pages sidebar">Pages</button>
+    <button type="button" class="deck-btn-present" id="laserToggle" title="Laser pointer">Laser</button>
+    <button type="button" class="deck-btn-present" id="fullscreenToggle" title="Enter fullscreen">Fullscreen</button>
+    <button type="button" class="deck-btn-save" id="btnSave" title="Save layout to browser (Ctrl+S)">Save</button>
+    <button type="button" class="deck-btn-add" id="btnAddElement" title="Add text, image, or video to current slide">Add element</button>
+    <button type="button" class="deck-btn-add" id="btnUnlockLayout" title="Convert this slide's editable content into movable components">Unlock layout</button>
+  </div>
+  <div class="deck-edit-chrome deck-left-row deck-left-row--tools" id="deckEditChrome" data-deck-chrome-surface="" role="toolbar" aria-label="Editing">
+    <button type="button" id="btnUndo" aria-label="Undo" title="Undo (Ctrl+Z)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14l-4-4 4-4M5 10h8a5 5 0 010 10h-2"/></svg>
+    </button>
+    <button type="button" id="btnRedo" aria-label="Redo" title="Redo (Ctrl+Y / Ctrl+Shift+Z)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l4-4-4-4M19 10h-8a5 5 0 000 10h2"/></svg>
+    </button>
+    <button type="button" class="deck-btn-done" id="btnDoneEdit">Done</button>
+  </div>
+</div>
+
+<div class="deck-add-element-menu" id="deckAddElementMenu" data-deck-chrome-surface="" role="menu" aria-label="Add element" hidden>
+  <button type="button" role="menuitem" data-add-kind="text">Text</button>
+  <button type="button" role="menuitem" data-add-kind="image">Image</button>
+  <button type="button" role="menuitem" data-add-kind="video">Video</button>
+</div>
+
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slides"></nav>
+<div class="deck-laser-layer" id="deckLaserLayer" aria-hidden="true">
+  <div class="laser-dot" id="laserDot"></div>
+</div>
+
+<aside class="slide-sidebar" id="slideSidebar" aria-label="Slide pages">
+  <h3>Slides</h3>
+  <div class="filmstrip-list" id="filmstripList"></div>
+  <div class="filmstrip-actions" style="margin-top:auto;">
+    <button type="button" id="btnExport">Export HTML</button>
+    <button type="button" id="btnNewPage">+New Page</button>
+  </div>
+</aside>
+
+<div class="rte-toolbar" id="rteToolbar" role="toolbar" aria-label="Text format" data-deck-chrome-surface="">
+  <div class="rte-toolbar-main">
+    <button type="button" data-cmd="bold"><strong>B</strong></button>
+    <button type="button" data-cmd="italic"><em>I</em></button>
+    <button type="button" class="rte-drawer-trigger" data-rte-drawer="font" aria-expanded="false" aria-controls="rteDrawerFont" title="Font family">Font</button>
+    <button type="button" class="rte-drawer-trigger" data-rte-drawer="scale" aria-expanded="false" aria-controls="rteDrawerScale" title="Viewport scale (clamp)">Scale</button>
+    <button type="button" class="rte-drawer-trigger" data-rte-drawer="px" aria-expanded="false" aria-controls="rteDrawerPx" title="Fixed size in px">Px</button>
+  </div>
+  <div class="rte-toolbar-panels" aria-live="polite">
+    <div class="rte-drawer-card" id="rteDrawerFont" data-rte-panel="font" role="group" aria-label="Font family" hidden>
+      <div class="rte-drawer-card-inner rte-drawer-card-inner--font">
+        <span class="rte-toolbar-meta">Font</span>
+        <button type="button" data-font="var(--font-body)">Body</button>
+        <button type="button" data-font="var(--font-display)">Display</button>
+        <button type="button" data-font="Georgia, 'Times New Roman', serif">Serif</button>
+        <button type="button" data-font="system-ui, -apple-system, 'Segoe UI', sans-serif">Sans</button>
+        <button type="button" data-font="ui-monospace, 'Cascadia Code', 'Consolas', monospace">Mono</button>
+      </div>
+    </div>
+    <div class="rte-drawer-card" id="rteDrawerScale" data-rte-panel="scale" role="group" aria-label="Scale" hidden>
+      <div class="rte-drawer-card-inner rte-drawer-card-inner--scale">
+        <span class="rte-toolbar-meta">Scale (viewport-safe)</span>
+        <button type="button" data-size="0.55" title="Small">S</button>
+        <button type="button" data-size="1" title="Medium (base)">M</button>
+        <button type="button" data-size="1.9" title="Large">L</button>
+        <button type="button" data-size="2.85" title="Extra large">XL</button>
+      </div>
+    </div>
+    <div class="rte-drawer-card" id="rteDrawerPx" data-rte-panel="px" role="group" aria-label="Pixel size" hidden>
+      <div class="rte-drawer-card-inner">
+        <span class="rte-toolbar-meta">Pixel size</span>
+        <button type="button" data-size-px="24">24</button>
+        <button type="button" data-size-px="36">36</button>
+        <button type="button" data-size-px="48">48</button>
+        <button type="button" data-size-px="72">72</button>
+        <button type="button" data-size-px="96">96</button>
+        <button type="button" data-size-custom title="Enter custom size in px">Custom…</button>
+        <div class="rte-px-custom" id="rtePxCustomRow" aria-hidden="true">
+          <label class="rte-toolbar-meta" for="rtePxCustomInput" style="margin:0;width:100%;">Px (8–400)</label>
+          <input type="number" id="rtePxCustomInput" min="8" max="400" step="1" inputmode="numeric" autocomplete="off" />
+          <button type="button" id="rtePxCustomApply">Apply</button>
+          <button type="button" id="rtePxCustomCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<input type="file" id="slotImageInput" accept="image/*" hidden data-deck-chrome-surface="">
+

@@ -1,0 +1,11 @@
+'use strict';
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs/promises'),os=require('node:os'),path=require('node:path');
+const {chromium}=require('playwright-core'),{CaptureEngine,browserPath}=require('../lib/capture.cjs'),{newJob,buildBook}=require('../lib/book.cjs');
+test('mixed EPUB contains restored selectable text, table, inline independent image and no UI or screenshots',async()=>{
+ const dir=await fs.mkdtemp(path.join(os.tmpdir(),'mixed-book-')),browser=await chromium.launch({executablePath:await browserPath(),headless:true});try{
+ const page=await browser.newPage();await page.setContent('<main><p>这是可复制的<strong>教材正文</strong>。</p><table><tr><td>渠道</td><td>价值</td></tr></table><img style="width:320px;height:0" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a3ioAAAAASUVORK5CYII="/><p>图前<img width="2" height="2" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+a3ioAAAAASUVORK5CYII="/>图后</p><button>摸鱼模式</button><script>window.secret=1</script></main>');
+ const engine=new CaptureEngine(dir);await engine.init();const job=newJob({format:'mixed',kind:'article',url:'https://example.com',title:'教材',start:1,end:1});await engine.save(job);const chapter=await engine.captureChapter(page,page.locator('main'),job,1);assert.equal(chapter.images.length,0);assert.equal(chapter.assets.length,1);assert.equal((chapter.content.join('').match(/<img/g)||[]).length,2);assert.match(chapter.content.join(''),/<table>/);assert.match(chapter.content.join(''),/这是可复制的/);assert.doesNotMatch(chapter.content.join(''),/摸鱼模式|window.secret/);job.chapters=[chapter];job.status='complete';const files=await buildBook(job,path.join(engine.jobsDir,job.id));const html=await fs.readFile(path.join(engine.jobsDir,job.id,files.find(f=>f.endsWith('.html'))),'utf8');assert.match(html,/教材正文/);assert.match(html,/data:image\/png;base64/);assert.match(html,/<td>渠道<\/td>/);const epub=await fs.readFile(path.join(engine.jobsDir,job.id,files.find(f=>f.endsWith('.epub'))));assert.ok(epub.includes(Buffer.from('这是可复制的')));assert.ok(!epub.includes(Buffer.from('图片正文')));
+ }finally{await browser.close();}
+});
+
+

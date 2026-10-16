@@ -1,0 +1,82 @@
+# ========== 环境变量与配置 ==========
+.env*
+!.env.example
+
+# ========== 文档 ==========
+*.md
+
+# ========== Python / 后端 ==========
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+.venv/
+
+# ========== Node / 前端 (防范外漏) ==========
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========== OS 系统文件 ==========
+.DS_Store
+Thumbs.db
+
+# ========== IDE 及编辑器配置 ==========
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ========== 项目产生的静态与日志 ==========
+logs/
+*.log
+backend/data/avatars/*
+!backend/data/avatars/.gitkeep
+backend/data/images/uploads/*
+!backend/data/images/uploads/.gitkeep
+backend/.generated/
+!backend/tools/open_slide/SKILL.md
+!backend/tools/open_slide/README.md
+!backend/tools/open_slide/references/*.md
+
+# Public source snapshots: exclude local state and generated artifacts.
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.pem
+*.key
+scratch/
+outputs/
+backend/scratch/
+apps/page-studio/数据/
+书页工坊/数据/
+**/runtime/node.exe
+**/.uv-cache/
+**/integration/source-manifest.json
+!README.md
+!**/README.md
+!部署指南.md
+!API_Documentation.md
+!**/使用说明.md

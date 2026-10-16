@@ -1,0 +1,5 @@
+{"name":"book-page-studio","version":"1.5.0","private":true,"description":"Local chapter capture and faithful EPUB builder","scripts":{"start":"node server.cjs","test":"node --test test/*.test.cjs"},"dependencies":{"playwright-core":"1.62.1"}}
+
+
+
+

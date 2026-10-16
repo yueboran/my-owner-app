@@ -1,0 +1,35 @@
+name: starmap
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: starmap_backend
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      # 挂载整个数据目录以实现持久化，避免 SQLite 文件锁或 inode 变更导致单文件挂载失效
+      - ./backend/data:/app/data
+    env_file:
+      - .env
+    networks:
+      - starmap_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: starmap_frontend
+    restart: always
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
+    networks:
+      - starmap_network
+
+networks:
+  starmap_network:
+    driver: bridge

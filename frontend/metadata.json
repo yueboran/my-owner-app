@@ -1,0 +1,6 @@
+{
+  "name": "灵感星图",
+  "description": "多维AI创新项目与价值拓展追踪星图，为您提供全网最专业的项目多模态AI多维度智能价值评估体系。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
