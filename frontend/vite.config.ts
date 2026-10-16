@@ -10,15 +10,28 @@ const studioProxy = {target: `http://127.0.0.1:${studioPort}`, changeOrigin: tru
 async function startPageStudio() {
   try {
     const response = await fetch(`http://127.0.0.1:${studioPort}/studio-app/health`, {signal: AbortSignal.timeout(1500)});
-    if (response.ok && (await response.json()).version === 'root-migration-v1') return;
+    if (response.ok) {
+      const health=await response.json();
+      if(health.version==='root-migration-v1'&&health.queueSupported&&health.qqOnly&&health.agentSearchSupported){
+        const hostFile=require.resolve('../apps/page-studio/integration/host.cjs');
+        // Refresh cached adapters on Vite restart while preserving the active engine.
+        if(require.cache[hostFile]?.exports.queue){
+          const loader=require.resolve('../apps/page-studio/integration/reload.cjs');delete require.cache[loader];
+          await require(loader).loadHost();
+        }
+        return;
+      }
+    }
   } catch { /* Start the local application when it is not already running. */ }
-  await require('../apps/page-studio/integration/host.cjs').start(studioPort);
+  const loader=require.resolve('../apps/page-studio/integration/reload.cjs');delete require.cache[loader];
+  const host=await require(loader).loadHost();
+  await host.start(studioPort);
 }
 
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss(), {
-      name: 'page-studio-original-app',
+      name: 'page-studio-original-app-v2',
       async configureServer() { await startPageStudio(); },
       async configurePreviewServer() { await startPageStudio(); },
     }],
@@ -47,3 +60,4 @@ export default defineConfig(() => {
     },
   };
 });
+

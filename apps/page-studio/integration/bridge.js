@@ -23,6 +23,7 @@ feedback.hidden=true;
 document.querySelector('#browser-status').after(feedback);
 const noticeElement=document.querySelector('#notice');
 new MutationObserver(()=>{
+  if(/^(?:阅读)?浏览器(?:已打开|窗口已从最小化恢复)/.test(noticeElement.textContent)){feedback.hidden=true;return;}
   if(!noticeElement.hidden && noticeElement.textContent){feedback.textContent=noticeElement.textContent;feedback.hidden=false;}
 }).observe(noticeElement,{attributes:true,childList:true,subtree:true,characterData:true});
 const catalog=document.querySelector('#catalog');
@@ -91,4 +92,62 @@ function normalizeReaderInput(){
 }
 for(const id of ['open-reader','catalog'])document.querySelector('#'+id).addEventListener('click',normalizeReaderInput,true);
 document.querySelector('#capture-form').addEventListener('submit',normalizeReaderInput,true);
+// The first source tab is dedicated to QQ Reading; other sources use their own tabs.
+document.querySelector('#online-tab').textContent='QQ阅读';
+const qqUrlInput=document.querySelector('#url');
+qqUrlInput.value='https://book.qq.com/';
+qqUrlInput.defaultValue='https://book.qq.com/';
+qqUrlInput.placeholder='QQ阅读首页、书籍详情页、目录页或阅读页网址';
+document.querySelector('label[for="url"]').textContent='QQ阅读网址';
+qqUrlInput.nextElementSibling.textContent='可先打开QQ阅读首页选书，再粘贴具体书籍的详情页、目录页或阅读页网址，读取目录后加入队列。';
+document.querySelector('#selector').placeholder='默认自动识别QQ阅读正文，通常无需填写';
+document.querySelector('#selector').nextElementSibling.textContent='仅在QQ阅读正文识别异常时指定正文区域。';
+qqUrlInput.addEventListener('input',()=>qqUrlInput.setCustomValidity(''));
+function validateQqInput(event,requireBook){
+  qqUrlInput.setCustomValidity('');
+  let url;try{url=new URL(qqUrlInput.value.trim());}catch{qqUrlInput.setCustomValidity('请输入完整的QQ阅读网址。');}
+  if(url){
+    if(!['http:','https:'].includes(url.protocol)||url.hostname!=='book.qq.com'||url.username||url.password)qqUrlInput.setCustomValidity('此页面仅支持QQ阅读，请输入 book.qq.com 的网址。');
+    else if(requireBook&&!/^\/book-(?:read\/\d+\/\d+|(?:detail|chapter)\/\d+)\/?$/.test(url.pathname))qqUrlInput.setCustomValidity('请填写具体书籍的详情页、目录页或阅读页网址，首页不能直接加入队列或读取目录。');
+  }
+  if(!qqUrlInput.reportValidity()){event.preventDefault();event.stopImmediatePropagation();}
+}
+document.querySelector('#open-reader').addEventListener('click',event=>validateQqInput(event,false),true);
+document.querySelector('#catalog').addEventListener('click',event=>validateQqInput(event,true),true);
+document.querySelector('#capture-form').addEventListener('submit',event=>validateQqInput(event,true),true);
+
+// Keep login feedback alongside both reader controls, independent of task notices.
+const authStatus=document.createElement('span');
+authStatus.id='reader-auth-status';authStatus.className='reader-auth-status';
+authStatus.setAttribute('role','status');authStatus.setAttribute('aria-live','polite');
+authStatus.textContent='授权状态：正在检测…';
+authStatus.title='仅检测 QQ 阅读登录态；具体章节的订阅与阅读权限以网站实际提示为准。';
+const readerControls=document.querySelector('#open-reader').parentElement;
+readerControls.classList.add('reader-controls');
+readerControls.append(authStatus);
+document.querySelector('label[for="url"]').before(readerControls);
+const bookFields=document.querySelector('#capture-form .fields');
+bookFields.classList.add('book-fields');
+bookFields.append(catalog);
+document.querySelector('#browser-status').hidden=true;
+let authPending=false;
+async function refreshReaderAuth(){
+  if(authPending||document.hidden)return;
+  authPending=true;
+  try{
+    const response=await fetch('/studio-app/api/reader-auth',{headers:{'x-studio-token':token},signal:AbortSignal.timeout(4000)});
+    if(!response.ok)throw new Error('检测失败');
+    const state=await response.json();
+    authStatus.textContent=state.message;authStatus.dataset.state=state.status;
+  }catch{authStatus.textContent='授权状态：检测暂不可用';authStatus.dataset.state='unknown';}
+  finally{authPending=false;}
+}
+refreshReaderAuth();
+setInterval(refreshReaderAuth,5000);
+window.addEventListener('focus',refreshReaderAuth);
+document.addEventListener('visibilitychange',refreshReaderAuth);
+for(const button of [document.querySelector('#open-reader'),catalog]){
+  const click=button.onclick;
+  button.onclick=async function(event){try{return await click.call(this,event);}finally{await refreshReaderAuth();}};
+}
 

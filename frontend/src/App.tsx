@@ -22,6 +22,8 @@ import { CareerNavigationView } from './components/views/CareerNavigationView';
 import { ExploreView } from './components/views/ExploreView';
 import { FootprintMapView } from './components/views/FootprintMapView';
 import { PageStudioView } from './components/apps/pageStudio/PageStudioView';
+import { SocialMediaView } from './components/apps/socialMedia/SocialMediaView';
+import { RecruitmentAgentView } from './components/apps/recruitmentAgent/RecruitmentAgentView';
 import { FreeCanvasView } from './components/views/FreeCanvasView';
 import ProfileView from './components/ProfileView';
 import AuthPage from './components/AuthPage';
@@ -45,6 +47,8 @@ export default function App() {
       'knowledge-collector',
       'footprint-map',
       'page-studio',
+      'social-media',
+      'recruitment-agent',
       'biography',
       'business-analysis',
       'personality-test',
@@ -220,6 +224,8 @@ export default function App() {
 
           {/* 书页工坊（应用合集子应用） */}
           {activeTab === 'page-studio' && <PageStudioView />}
+          {activeTab === 'social-media' && <SocialMediaView />}
+          {activeTab === 'recruitment-agent' && <RecruitmentAgentView />}
 
 
           {/* 性格测试 */}
