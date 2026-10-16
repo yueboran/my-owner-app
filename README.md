@@ -30,6 +30,8 @@ npm --prefix frontend run dev
 - `frontend`：React、TypeScript、Vite 前端。
 - `backend`：FastAPI 接口、数据模型与工具。
 - `apps/page-studio`：书页工坊完整应用及项目接入层。
+- `apps/social-media`：自媒体工作台说明与后续独立服务目录，入口位于应用合集。
+- `apps/recruitment-agent`：招聘浏览器代理说明与后续服务目录，规划调用 Laya 与 LLM 操作招聘网站，入口位于应用合集。
 
 数据库、浏览器登录会话、抓取结果、依赖目录和本机 Node 可执行文件不随源码发布。依赖安装后再运行；原版独立模式可在相应目录执行 `npm install` 和 `npm start`。
 

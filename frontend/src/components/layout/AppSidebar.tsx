@@ -65,6 +65,8 @@ export const NAV_ITEMS: NavGroupItem[] = [
     children: [
       { key: 'footprint-map', label: '华夏足迹', icon: MapPin },
       { key: 'page-studio', label: '书页工坊', icon: BookOpen },
+      { key: 'social-media', label: '自媒体工作台', icon: PenLine },
+      { key: 'recruitment-agent', label: '招聘浏览器代理', icon: Briefcase },
     ],
   },
   {
