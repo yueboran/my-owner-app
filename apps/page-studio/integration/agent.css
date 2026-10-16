@@ -1,0 +1,26 @@
+/* AI代理搜索表单项样式：与QQ阅读网址完全统一，按钮位于输入框右侧 */
+.agent-search{margin-bottom:20px}
+.agent-search label{display:block;font-size:12px;font-weight:600;margin-bottom:8px}
+.agent-query-row{display:flex;gap:10px;align-items:center}
+.agent-query-row input{flex:1;min-width:0;border:1px solid #d8e2e9;background:#f8fafc;padding:10px 12px;border-radius:8px;color:var(--ink);font-size:12px;min-height:38px;box-sizing:border-box}
+.agent-query-row button{flex-shrink:0;white-space:nowrap;min-height:38px;padding:0 14px}
+.agent-query-row input:focus-visible,#activity-tabs button:focus-visible{outline:3px solid #60a7c6;outline-offset:3px}
+.agent-search .hint{color:var(--muted);font-size:11px;line-height:1.8;margin:8px 0 0}
+
+/* 浏览器操作实况与运行步骤样式 */
+#activity-tabs{flex-wrap:wrap}
+.agent-steps{list-style:none;padding:0;margin:16px 0;display:grid;gap:12px}
+.agent-step{border-left:3px solid #9caeb9;padding:12px;background:#f6f9fc;border-radius:6px}
+.agent-step.complete{border-color:#059669}
+.agent-step.running{border-color:#315bff}
+.agent-step.failed{border-color:#d04d4d}
+.agent-step>div{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.agent-step p{font-size:13px;margin:7px 0;overflow-wrap:anywhere}
+.agent-step span{font-size:13px}
+.agent-step meter{width:160px;max-width:100%}
+.agent-target{color:#526780}
+#agent-panel{min-width:0}
+#agent-feedback{overflow-wrap:anywhere}
+.activity.panel{min-width:0}
+@media(min-width:1001px){#agent-panel:not([hidden]){display:flex;flex-direction:column;flex:1;min-height:0;contain:size;overflow-y:auto;overscroll-behavior:contain;padding-right:6px}}
+@media(max-width:1000px){#agent-panel{max-height:600px;overflow-y:auto;overscroll-behavior:contain}}

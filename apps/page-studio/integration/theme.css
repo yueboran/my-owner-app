@@ -1,13 +1,35 @@
-/* Project theme overrides; upstream layout, IDs and interactions are retained. */
+/* 项目主题覆盖与布局样式；遵循原有交互与元素标识 */
 :root{--bg:#f4f6f9;--paper:#fff;--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--blue:#2b5aed;--blue-dark:#1d4ed8;--teal:#059669;--light:#eff6ff;--red:#dc2626}
 .button.danger{color:#b91c1c;background:#fef2f2;border:1px solid #fecaca}.button.danger:hover{background:#fee2e2}
+
+/* 执行队列工具栏与列表样式：收纳在卡片Tab内部 */
+.queue-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;flex-wrap:wrap}
+.queue-toolbar #queue-status{margin:0;font-size:12px;color:var(--muted)}
+.queue-toolbar .buttons{flex-shrink:0;gap:8px}
+.queue-list{list-style:none;padding:0;margin:10px 0;max-height:260px;overflow:auto}
+.queue-list li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}
+.queue-info{min-width:0;display:flex;flex-direction:column;gap:3px}
+.queue-info strong{font-size:13px;overflow-wrap:anywhere}
+.queue-info span{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.queue-list .buttons{flex-shrink:0;gap:5px}
+.queue-list .button{padding:5px 8px;min-height:30px;font-size:12px}
+#queue-active:not(:empty){display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:13px;color:var(--blue);margin-bottom:12px;padding:9px 12px;background:#eff6ff;border-radius:8px;border:1px solid #dbeafe}
+
+/* 基础与整体排版 */
 body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:var(--bg)}
 .rail{display:none}
 main{margin:0 auto;max-width:1440px;padding:24px}
 h1{font-family:inherit;font-size:26px;font-weight:700;letter-spacing:0}
 .eyebrow{font-size:12px;letter-spacing:.5px;font-weight:600}
 .badge{border-radius:999px;background:#fff;font-size:11px}
-.workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px}
+
+/* 双卡片网格拉伸对齐，保持两边外卡片高度完全一致 */
+.workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:24px;align-items:stretch}
+.source.panel,.activity.panel{display:flex;flex-direction:column;height:100%;box-sizing:border-box}
+.activity{min-height:auto}
+#queue-panel:not([hidden]),#activity-panel:not([hidden]){display:flex;flex-direction:column;flex:1;min-height:0}
+#job-detail{display:flex;flex-direction:column;flex:1;min-height:0}
+
 .panel{border-radius:16px;box-shadow:0 1px 3px #0f172a08;padding:24px}
 .panel-heading h2{font-size:17px;font-weight:650}
 .panel-heading>span{font-size:12px;letter-spacing:0}
@@ -16,12 +38,50 @@ h1{font-family:inherit;font-size:26px;font-weight:700;letter-spacing:0}
 .primary:hover{background:var(--blue-dark)}
 input{border-radius:8px;background:#f8fafc;min-width:0}
 .hint,.login-tip{font-size:12px;line-height:1.8}
-.chapter-list{max-height:360px}
-.chapter-list li{font-size:14px;gap:16px;line-height:1.7;padding:10px 12px}
+
+/* 压缩已完成章节及任务详情垂直高度，保证外卡片紧凑协调 */
+.reader-auth-status{margin-left:auto;font-size:12px;line-height:1.6;color:#64748b;max-width:100%;overflow-wrap:anywhere}
+.reader-auth-status[data-state="logged-in"]{color:#047857}
+.reader-auth-status[data-state="logged-out"]{color:#b45309}
+.reader-controls{align-items:center;flex-wrap:wrap;margin:16px 0 20px}
+#capture-form .book-fields{grid-template-columns:minmax(0,1fr) 64px 64px auto;align-items:end}
+.book-fields #catalog{margin:0;white-space:nowrap;min-height:42px}
+@media(max-width:560px){
+  #capture-form .book-fields{grid-template-columns:minmax(0,1fr) 64px 64px}
+  .book-fields #catalog{grid-column:1 / -1;justify-self:end}
+  .reader-controls .reader-auth-status{margin-left:0}
+}
+.current-book{display:flex;gap:12px;margin:12px 0 10px}
+.mini-book{padding:8px 9px;font-size:20px}
+.current-book h3{font-size:15px;margin:1px 0 3px}
+#job-detail h4{font-weight:600;font-size:12px;margin:12px 0 6px}
+.chapter-list{max-height:140px;min-height:50px;overflow-y:auto;margin:0 0 10px;padding:0;list-style:none}
+.chapter-list li{font-size:13px;gap:12px;line-height:1.4;padding:6px 10px;border-bottom:1px solid #f1f5f9}
 .chapter-list li div{overflow-wrap:anywhere}
-.chapter-list li span{white-space:nowrap}
+.chapter-list li span{white-space:nowrap;font-size:11px;color:var(--teal)}
+.downloads{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.validation-note{display:flex;gap:10px;border-top:1px solid var(--line);padding-top:12px;margin-top:auto;font-size:11px;line-height:1.7}
+
 .notice{font-size:13px;border-radius:10px;max-width:calc(100vw - 32px)}
 .history-row{gap:16px}
 dialog{border-radius:16px;box-shadow:0 24px 64px #0f172a26}
-@media(max-width:1000px){.workspace{grid-template-columns:minmax(0,1fr)}main{margin:0;padding:20px}.badge{display:none}}
-@media(max-width:560px){main{padding:16px}h1{font-size:24px}.panel{padding:18px}.fields{grid-template-columns:minmax(0,1fr) 64px 64px}.history-row{flex-wrap:wrap}.history-actions{margin-left:auto}.buttons{flex-wrap:wrap}.workflow{gap:8px}.chapter-list li{align-items:start}}
+
+@media(max-width:1000px){
+  .workspace{grid-template-columns:minmax(0,1fr);align-items:start}
+  .source.panel,.activity.panel{height:auto}
+  main{margin:0;padding:20px}
+  .badge{display:none}
+  .queue-list li{align-items:start;flex-direction:column}
+  .queue-toolbar{align-items:start;flex-direction:column}
+}
+@media(max-width:560px){
+  main{padding:16px}
+  h1{font-size:24px}
+  .panel{padding:18px}
+  .fields{grid-template-columns:minmax(0,1fr) 64px 64px}
+  .history-row{flex-wrap:wrap}
+  .history-actions{margin-left:auto}
+  .buttons{flex-wrap:wrap}
+  .workflow{gap:8px}
+  .chapter-list li{align-items:start}
+}
